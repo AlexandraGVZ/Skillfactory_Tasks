@@ -1,1 +1,3 @@
 Test comment master1
+
+Test comment newbranch
