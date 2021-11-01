@@ -1,0 +1,63 @@
+SELECT b.flight_id,
+       b.total_sum,
+       b.number_of_passengers,
+       b.number_of_seats,
+       (b.number_of_passengers/b.number_of_seats) fill_up,
+       b.model,
+       b.flight_no,
+       b.departure_airport,
+       b.arrival_airport,
+       b.aircraft_code,
+       b.actual_departure,
+       b.actual_arrival,
+       b.length_of_flight
+FROM
+  (SELECT DISTINCT a.flight_id,
+                   sum(a.amount*a.number_of_tickets) over(PARTITION BY a.flight_id) total_sum,
+                                                     sum(a.number_of_tickets) over(PARTITION BY a.flight_id) number_of_passengers,
+                                                                              a.model,
+                                                                              a.number_of_seats,
+                                                                              a.flight_no,
+                                                                              a.departure_airport,
+                                                                              a.arrival_airport,
+                                                                              a.aircraft_code,
+                                                                              a.actual_departure,
+                                                                              a.actual_arrival,
+                                                                              a.length_of_flight
+   FROM
+     (SELECT DISTINCT f.flight_id,
+                      t.amount,
+                      t.fare_conditions,
+                      count(*) over(PARTITION BY f.flight_id, t.amount, t.fare_conditions) number_of_tickets,
+                               aa.model,
+                               f.number_of_seats,
+                               f.flight_no,
+                               f.departure_airport,
+                               f.arrival_airport,
+                               f.aircraft_code,
+                               f.actual_departure,
+                               f.actual_arrival,
+                               f.length_of_flight
+      FROM
+        (SELECT fl.flight_id,
+                fl.flight_no,
+                fl.departure_airport,
+                fl.arrival_airport,
+                fl.aircraft_code,
+                ss.number_of_seats,
+                fl.actual_departure,
+                fl.actual_arrival,
+                (fl.actual_arrival-fl.actual_departure)::text length_of_flight
+         FROM
+           (SELECT s.aircraft_code,
+                   count(s.seat_no) number_of_seats
+            FROM dst_project.seats s
+            GROUP BY 1) ss
+         JOIN dst_project.flights fl ON fl.aircraft_code=ss.aircraft_code
+         WHERE fl.departure_airport = 'AAQ'
+           AND (date_trunc('month', fl.scheduled_departure) in ('2017-01-01',
+                                                                '2017-02-01',
+                                                                '2017-12-01'))
+           AND fl.status not in ('Cancelled')) f
+     LEFT  JOIN dst_project.ticket_flights t ON f.flight_id=t.flight_id
+      JOIN dst_project.aircrafts aa ON f.aircraft_code=aa.aircraft_code) a) b
