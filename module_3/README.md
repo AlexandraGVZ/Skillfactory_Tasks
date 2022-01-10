@@ -1,31 +1,33 @@
-###This is the heading level 3###  
-
-**this is the bold text**  
-
-This is the heading level 1  
-===========================  
-
-This is the heading level 2  
----------------------------  
-
->This is citation    
-
-**This is bold text**  
-
-* This is element 1  
-* This is element 2  
-* This is element 3   
-
-1. This is elem 1  
-2. This is elem 2  
-3. This is elem 3  
-
-[This is hyperlink](http://www.yandex.ru "Yandex.ru")  
-
-*This is text in italics*  
-
+Project – TripAdvisor Rating  
+=============================  
  
+Автор: Александра Гвоздева  
+--------------------------  
+
+**Задание**  
+
+Построение модели для прогнозирования рейтинга ресторана на сайте TripAdvisor.  
+
+Описание признаков    
+------------------       
+
+* City: Город
+* Cuisine Style: Кухня
+* Ranking: Ранг ресторана относительно других ресторанов в этом городе
+* Price Range: Цены в ресторане в 3 категориях
+* Number of Reviews: Количество отзывов
+* Reviews: 2 последних отзыва и даты этих отзывов
+* URL_TA: страница ресторана на 'www.tripadvisor.com'
+* ID_TA: ID ресторана в TripAdvisor
+* Rating: Рейтинг ресторана
 
 
+В результате работы над данными:  
+--------------------------------  
 
-
+1. В датасет были внесены дополнительно 15 числовых признаков, не считая тех, которые были получены в результате применения метода get_dummies. Были внесены следующие признаки: 'Number_of_Reviews_isNAN', 'price_cat', 'number_of_restaurants', 'ranking_norm_rest', 'number_of_citizens', 'ranking_norm_citizens', 'number_of_reviews_norm_citizens', 'salaries','ranking_norm_salaries', 'number_of_cuisines', 'last_review', 'time_between', 'net_size', 'ranking_norm_net_size', 'number_of_reviews_norm_net_size'. Самым важным из них при обучении модели оказался признак 'ranking_norm_rest'. Этот признак показывается ранг ресторана, нормированный на число ресторанов в данном городе.
+2. При анализе новых количественных признаков применялись методы работы с выбросами и визуализация. Часто новые признаки содержали много пропусков. Заполнение их проводилось либо медианой, либо случайными значениями из уже имеющихся.
+3. Дважды был применен метод get_dummies (к колонке City и колонке restaurant_category). Это увеличило общее число количественных признаков до 55.
+4. Для Feature Engeneering использовались внешние источники данных (Википедия).
+5. Расширение числа количественных признаков позволило получить значение метрики MAE, равное 0.2028.
+6. Было принято участие в соревновании на kaggle.com [ссылка](https://www.kaggle.com/c/sf-dst-restaurant-rating "Перейти к соревнованию")  
