@@ -1,4 +1,4 @@
-Project Ц TripAdvisor Rating  
+Project Ц Two Sigma Connect: Rental Listing Inquiries  
 =============================  
  
 јвтор: јлександра √воздева  
